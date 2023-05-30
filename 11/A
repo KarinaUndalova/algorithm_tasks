@@ -1,5 +1,4 @@
 #id 87598822
-
 def data_input():
     length_street = int(input())
     street = [int(num) for num in input().split(' ')]
@@ -8,9 +7,9 @@ def calculations():
     length_street, street = data_input()
     distance = []
     zero_position = None
-    for i, elem in enumerate(street):
+    for index, elem in enumerate(street):
         if elem == 0:
-            zero_position = i
+            zero_position = index
             distance.append(0)
             continue
         if (elem != 0 and zero_position != None):
@@ -18,11 +17,11 @@ def calculations():
         else:
             distance.append(length_street)
     zero_position = None
-    for i, elem in reversed(list(enumerate(street))):
+    for index, elem in reversed(list(enumerate(street))):
         if elem == 0:
             zero_position = i
             continue
-        if (elem != 0 and zero_position != None and distance[i] > zero_position - i):
+        if (elem != 0 and zero_position != None and distance[index] > zero_position - index):
             distance[i] = (zero_position - i)
     print(*distance)
 if __name__ == '__main__':
