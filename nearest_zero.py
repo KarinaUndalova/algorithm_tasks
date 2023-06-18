@@ -1,28 +1,33 @@
-#id 87598822
-def data_input():
-    length_street = int(input())
-    street = [int(num) for num in input().split(' ')]
-    return length_street, street
-def calculations():
-    length_street, street = data_input()
+# 88236711
+
+from typing import List
+
+
+def calculate(numbers: List[int], length: int) -> List[int]:
     distance = []
     zero_position = None
-    for index, elem in enumerate(street):
-        if elem == 0:
-            zero_position = index
+    for i, value in enumerate(numbers):
+        if value == 0:
+            zero_position = i
             distance.append(0)
             continue
-        if (elem != 0 and zero_position != None):
+        if zero_position is not None:
             distance.append(i - zero_position)
         else:
-            distance.append(length_street)
-    zero_position = None
-    for index, elem in reversed(list(enumerate(street))):
-        if elem == 0:
-            zero_position = i
-            continue
-        if (elem != 0 and zero_position != None and distance[index] > zero_position - index):
-            distance[i] = (zero_position - i)
-    print(*distance)
+            distance.append(length)
+    return distance
+
+
+def nearest_zero(length: int, number_street: List[int]) -> List[int]:
+    distance = calculate(number_street, length)
+    r_distance = (calculate(number_street[::-1], length))[::-1]
+    result = []
+    for step in range(length):
+        result.append(min(distance[step], r_distance[step]))
+    return result
+
+
 if __name__ == '__main__':
-    calculations()
+    length = int(input())
+    number_street = [int(num) for num in input().split(' ')]
+    print(' '.join([str(x) for x in nearest_zero(length, number_street)]))
