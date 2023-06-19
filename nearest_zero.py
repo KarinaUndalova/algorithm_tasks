@@ -1,33 +1,26 @@
-# 88236711
+# 88366788
 
-from typing import List
-
-
-def calculate(numbers: List[int], length: int) -> List[int]:
-    distance = []
-    zero_position = None
-    for i, value in enumerate(numbers):
+def nearest_zero(array):
+    distance = [0] * len(array)
+    distance_zero = float('inf')
+    for i, value in enumerate(array):
         if value == 0:
-            zero_position = i
-            distance.append(0)
-            continue
-        if zero_position is not None:
-            distance.append(i - zero_position)
+            distance[i] = 0
+            distance_zero = 0
+            for j in range(i, 0-1, -1):
+                if distance_zero <= distance[j]:
+                    distance[j] = distance_zero
+                    distance_zero += 1
+                else:
+                    break
+            distance_zero = 0
         else:
-            distance.append(length)
+            distance_zero += 1
+            distance[i] = distance_zero
     return distance
 
 
-def nearest_zero(length: int, number_street: List[int]) -> List[int]:
-    distance = calculate(number_street, length)
-    r_distance = (calculate(number_street[::-1], length))[::-1]
-    result = []
-    for step in range(length):
-        result.append(min(distance[step], r_distance[step]))
-    return result
+n = int(input())
+street = [int(house) for house in input().split()]
 
-
-if __name__ == '__main__':
-    length = int(input())
-    number_street = [int(num) for num in input().split(' ')]
-    print(' '.join([str(x) for x in nearest_zero(length, number_street)]))
+print(*nearest_zero(street))

@@ -1,28 +1,17 @@
-# 88329461
+# #id 88364317
 
-from typing import List
-
-
-def trainer(number: int, matrix: List[str]) -> int:
-    numbers = {}
-    for i in range(1, 10):
-        numbers[i] = 0
-
+def trainer(*, keys):
     scores = 0
-    for i in range(4):
-        for k in matrix[i]:
-            if k == '.':
-                continue
-            numbers[int(k)] += 1
-    for val in numbers.values():
-        if 0 < val <= 2 * number:
-            scores += 1
-    numbers = {i: 0 for i in numbers}
-
+    numbers = [0] * 10
+    for row in range(4):
+        for k in input():
+            if k != '.':
+                numbers[int(k)] += 1
+    for k in numbers:
+        scores += 1 if 0 < k <= 2 * keys else 0
     return scores
 
 
-if __name__ == '__main__':
-    number = int(input())
-    matrix = [input() for i in range(4)]
-    print(trainer(number, matrix))
+keys = int(input())
+
+print(trainer(keys=keys))
