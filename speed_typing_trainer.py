@@ -1,4 +1,4 @@
-# #id 88364317
+# #id 88399667
 
 def trainer(*, keys):
     scores = 0
@@ -12,6 +12,6 @@ def trainer(*, keys):
     return scores
 
 
-keys = int(input())
-
-print(trainer(keys=keys))
+if __name__ == "__main__":
+    keys = int(input())
+    print(trainer(keys=keys))

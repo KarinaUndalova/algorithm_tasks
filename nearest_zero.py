@@ -1,4 +1,4 @@
-# 88366788
+# 88399710
 
 def nearest_zero(array):
     distance = [0] * len(array)
@@ -20,7 +20,7 @@ def nearest_zero(array):
     return distance
 
 
-n = int(input())
-street = [int(house) for house in input().split()]
-
-print(*nearest_zero(street))
+if __name__ == "__main__":
+    n = int(input())
+    street = [int(house) for house in input().split()]
+    print(*nearest_zero(street))
