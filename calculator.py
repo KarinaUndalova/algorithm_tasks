@@ -1,65 +1,46 @@
-#88427057
+#88460392
 
-class Node:
-    def __init__(self, value, next=None, prev=None):
-        self.value = value
-        self.next = next
-        self.prev = prev
+OPERATORS = {
+    '+': lambda x, y: x + y,
+    '-': lambda x, y: x - y,
+    '*': lambda x, y: x * y,
+    '/': lambda x, y: x // y,
+}
 
 
-class DoublyLinkedList:
+class Stack:
     def __init__(self):
-        self.head = None
-        self.tail = None
+        self.__items = []
 
     def push(self, item):
-        new_node = Node(item)
-        if self.head is None:
-            self.head = new_node
-            self.tail = new_node
-            return
-
-        self.tail.next = new_node
-        new_node.prev = self.tail
-        self.tail = new_node
+        self.__items.append(item)
 
     def pop(self):
-        elem = self.tail
-        if self.tail.prev is None:
-            self.head = None
-            self.tail = None
+        try:
+            return self.__items.pop()
+        except IndexError:
+            raise IndexError('Нет операндов для расчета.')
+
+
+def calculator(line):
+    stack = Stack()
+    for element in line:
+        if element in OPERATORS:
+            operand1, operand2 = stack.pop(), stack.pop()
+            try:
+                stack.push(int(OPERATORS[element](operand2, operand1)))
+            except ZeroDivisionError:
+                raise ZeroDivisionError('Ошибка деления на ноль.')
+            except TypeError:
+                raise TypeError(f'{element} операция не поддерживается.')
         else:
-            self.tail = self.tail.prev
-            self.tail.next = None
-
-        return elem.value
-
-
-def calculator(polski_expression):
-    n = len(polski_expression)
-    stack = DoublyLinkedList()
-    result = 0
-    for i in range(n):
-        if polski_expression[i] in '+-*/':
-            number_2 = stack.pop()
-            number_1 = stack.pop()
-            if polski_expression[i] == '+':
-                result = number_1 + number_2
-            elif polski_expression[i] == '-':
-                result = number_1 - number_2
-            elif polski_expression[i] == '*':
-                result = number_1 * number_2
-            elif polski_expression[i] == '/':
-                result = number_1 // number_2
-
-            stack.push(result)
-        else:
-            number = int(polski_expression[i])
-            stack.push(number)
-
+            try:
+                stack.push(int(element))
+            except:
+                raise KeyError(f'Невозможно преобразовать {element}')
     return stack.pop()
 
 
-if __name__ == "__main__":
-    polski_expression = [symbol for symbol in input().strip().split()]
-    print(calculator(polski_expression))
+if __name__ == '__main__':
+    inp_string = input().split()
+    print(calculator(inp_string))

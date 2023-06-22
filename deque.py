@@ -1,70 +1,86 @@
-#88426913
+#88460578
+
+ERROR_MESSAGE = 'error'
+ERROR_COMMAND = 'Error in command: {command}'
+
 
 class Deque:
     def __init__(self, max_size):
-        self.deque = [None] * max_size
-        self.max_size = max_size
-        self.head = 0
-        self.tail = 0
-        self.size = 0
+        self.__items = [None] * max_size
+        self.__max_size = max_size
+        self.__head = 0
+        self.__tail = 0
+        self.__size = 0
 
-    def is_empty(self):
-        return self.size == 0
+    def __check_full_queue(self):
+        return self.__size == self.__max_size
+
+    def __check_empty_queue(self):
+        return self.__size == 0
+
+    def __get_index(self, method):
+        if method == 'push_front':
+            if self.__check_empty_queue():
+                self.__head = 0
+                self.__tail = 0
+                return 0
+            return (self.__head - 1) % self.__max_size
+        if method == 'push_back':
+            if self.__check_empty_queue():
+                self.__head = 0
+                self.__tail = 0
+                return 0
+            return (self.__tail + 1) % self.__max_size
+        if method == 'pop_front':
+            return (self.__head + 1) % self.__max_size
+        if method == 'pop_back':
+            return (self.__tail - 1) % self.__max_size
 
     def push_front(self, value):
         """Метод push_front добавляет элемент в начало дека"""
-        if self.size != self.max_size:
-            self.deque[self.head - 1] = value
-            self.head = (self.head - 1) % self.max_size
-            self.size += 1
-        else:
-            print('error')
+        if self.__check_full_queue():
+            raise RuntimeError(ERROR_MESSAGE)
+        self.__head = self.__get_index('push_front')
+        self.__items[self.__head] = value
+        self.__size += 1
 
     def push_back(self, value):
         """Метод push_back добавляет элемент в конец дека"""
-        if self.size != self.max_size:
-            self.deque[self.tail] = value
-            self.tail = (self.tail + 1) % self.max_size
-            self.size += 1
-        else:
-            print('error')
+        if self.__check_full_queue():
+            raise RuntimeError(ERROR_MESSAGE)
+        self.__tail = self.__get_index('push_back')
+        self.__items[self.__tail] = value
+        self.__size += 1
 
     def pop_front(self):
         """Метод pop_front удаляет элемент из начала дека и возвращает его"""
-        if self.is_empty():
-            return 'error'
-        x = self.deque[self.head]
-        self.deque[self.head] = None
-        self.head = (self.head + 1) % self.max_size
-        self.size -= 1
-        return x
+        if self.__check_empty_queue():
+            raise RuntimeError(ERROR_MESSAGE)
+        value = self.__items[self.__head]
+        self.__head = self.__get_index('pop_front')
+        self.__size -= 1
+        return value
 
     def pop_back(self):
         """Метод pop_back удаляет элемент из конца дека и возвращает его"""
-        if self.is_empty():
-            return 'error'
-        x = self.deque[self.tail - 1]
-        self.deque[self.tail - 1] = None
-        self.tail = (self.tail - 1) % self.max_size
-        self.size -= 1
-        return x
+        if self.__check_empty_queue():
+            raise RuntimeError(ERROR_MESSAGE)
+        value = self.__items[self.__tail]
+        self.__tail = self.__get_index('pop_back')
+        self.__size -= 1
+        return value
 
 
 if __name__ == '__main__':
-    count_commands = int(input())
-    deque_size = int(input())
-
-    deque = Deque(deque_size)
-
-    for i in range(count_commands):
-        command = input().strip()
-        if command.startswith('push_front '):
-            command = command.replace('push_front ', '')
-            deque.push_front(int(command))
-        elif command.startswith('push_back '):
-            command = command.replace('push_back ', '')
-            deque.push_back(int(command))
-        elif command == 'pop_front':
-            print(deque.pop_front())
-        elif command == 'pop_back':
-            print(deque.pop_back())
+    command_count = int(input())
+    deque = Deque(max_size=int(input()))
+    for _ in range(command_count):
+        try:
+            command, *params = input().strip().split(' ')
+            result = getattr(deque, command)(*params)
+            if 'pop' in command:
+                print(result)
+        except RuntimeError:
+            print(ERROR_MESSAGE)
+        except AttributeError:
+            raise ValueError(ERROR_COMMAND.format(command=command))
