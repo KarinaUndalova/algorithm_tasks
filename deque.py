@@ -1,11 +1,6 @@
-#88494890
+#88578536
 
 class NoItemsException(Exception):
-    def __init__(self):
-        pass
-
-
-class MaxItemsException(Exception):
     def __init__(self):
         pass
 
@@ -28,7 +23,7 @@ class Deck:
 
     def push_back(self, value):
         if self.is_full:
-            raise MaxItemsException
+            raise NoItemsException
         else:
             self._tail = (self._tail + 1) % self._max_size
             self._array[self._tail] = value
@@ -36,7 +31,7 @@ class Deck:
 
     def push_front(self, value):
         if self.is_full:
-            raise MaxItemsException
+            raise NoItemsException
         else:
             self._head = (self._head - 1) % self._max_size
             self._array[self._head] = value
@@ -60,20 +55,18 @@ class Deck:
             self._size -= 1
             return value
 
+if __name__ == '__main__':
+    n = int(input())
+    m = int(input())
 
-n = int(input())
-m = int(input())
+    deck = Deck(m)
 
-deck = Deck(m)
-
-for _ in range(n):
-    try:
-        cmd = input().split(' ')
-        if len(cmd) == 1:
-            print(getattr(deck, cmd[0])())
-        else:
-            getattr(deck, cmd[0])(cmd[1])
-    except NoItemsException:
-        print('error')
-    except MaxItemsException:
-        print('error')
+    for _ in range(n):
+        try:
+            cmd = input().split(' ')
+            if len(cmd) == 1:
+               print(getattr(deck, cmd[0])())
+            else:
+               getattr(deck, cmd[0])(cmd[1])
+        except NoItemsException:
+            print('error')
