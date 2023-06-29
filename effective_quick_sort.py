@@ -1,43 +1,53 @@
-#88609177
+#88678706
 
-def partition(arr, left, right):
-    i = left - 1
-    pivot = arr[right]
+class Participant:
+    def __init__(self, name, points, penalty):
+        self.name = name
+        self.points = points
+        self.penalty = penalty
 
-    for j in range(left, right):
-        if arr[j] <= pivot:
-            i += 1
-            arr[i], arr[j] = arr[j], arr[i]
+    def __str__(self):
+        return self.name
 
-    arr[i+1], arr[right] = arr[right], arr[i+1]
-    # функция возвращает индекс, на который встал опорный элемент
-    # после разделения части массива на меньше и больше чем опорный
-    return i+1
-
-
-def quicksort_inplace(arr, left, right):
-    if left >= right:
-        return None
-
-    p_idx = partition(arr, left, right)
-    quicksort_inplace(arr, left, p_idx-1)
-    quicksort_inplace(arr, p_idx+1, right)
+    def __lt__(self, other):
+        if isinstance(other, Participant):
+            return(
+                (-self.points, self.penalty, self.name) <
+                (-other.points, other.penalty, other.name)
+            )
+        return NotImplemented
 
 
-def normalize_array_to_sort(raw_data):
-    # Кол-во решенных задач переводим в отриц. число для сравнения списков
-    raw_data[1] = - int(raw_data[1])
-    raw_data[2] = int(raw_data[2])
-    # возвращаем данные в порядке лексикографического сравнения эл-ов в списках
-    # 1-число решенных задач, 2-штраф, 0-логин
-    return [raw_data[1], raw_data[2], raw_data[0]]
+def quicksort(array: list, start=0, end=0):
+
+    def _partition(low, high):
+        if low >= high:
+            return
+        left = low
+        right = high
+        pivot = array[(right + left) // 2]
+        while left <= right:
+            while array[left] < pivot:
+                left += 1
+            while array[right] > pivot:
+                right -= 1
+            if left <= right:
+                array[left], array[right] = array[right], array[left]
+                left += 1
+                right -= 1
+        _partition(low, right)
+        _partition(left, high)
+
+    _partition(start, end - 1)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     number = int(input())
-    array = [normalize_array_to_sort(input().split()) for _ in range(number)]
-
-    quicksort_inplace(array, left=0, right=number-1)
-
-    for row in array:
-        print(row[2])
+    players = []
+    for index in range(number):
+        name, points, penalty = input().split()
+        players.append(
+            Participant(points=int(points), penalty=int(penalty), name=name)
+        )
+    quicksort(players, end=len(players))
+    print(*players, sep='\n')
