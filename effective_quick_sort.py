@@ -1,53 +1,38 @@
-#88678706
+#88722429
 
-class Participant:
-    def __init__(self, name, points, penalty):
-        self.name = name
-        self.points = points
-        self.penalty = penalty
+def quick_sort(users, length):
 
-    def __str__(self):
-        return self.name
+    def _quick_sort(users, left, right):
+        if left < right:
+            part = partition(users, left, right)
+            _quick_sort(users, left, part)
+            _quick_sort(users, part + 1, right)
 
-    def __lt__(self, other):
-        if isinstance(other, Participant):
-            return(
-                (-self.points, self.penalty, self.name) <
-                (-other.points, other.penalty, other.name)
-            )
-        return NotImplemented
+    def partition(users, left, right):
+        pivot = users[left]
+        while True:
+            while users[left] < pivot:
+                left = left + 1
+            while users[right] > pivot:
+                right = right - 1
+            if left >= right:
+                return right
+            users[left], users[right] = users[right], users[left]
+            left = left + 1
+            right = right - 1
 
-
-def quicksort(array: list, start=0, end=0):
-
-    def _partition(low, high):
-        if low >= high:
-            return
-        left = low
-        right = high
-        pivot = array[(right + left) // 2]
-        while left <= right:
-            while array[left] < pivot:
-                left += 1
-            while array[right] > pivot:
-                right -= 1
-            if left <= right:
-                array[left], array[right] = array[right], array[left]
-                left += 1
-                right -= 1
-        _partition(low, right)
-        _partition(left, high)
-
-    _partition(start, end - 1)
+    _quick_sort(users, 0, length - 1)
+    return users
 
 
 if __name__ == '__main__':
-    number = int(input())
-    players = []
-    for index in range(number):
-        name, points, penalty = input().split()
-        players.append(
-            Participant(points=int(points), penalty=int(penalty), name=name)
-        )
-    quicksort(players, end=len(players))
-    print(*players, sep='\n')
+    length = int(input())
+    users = []
+    for _ in range(length):
+        user_name, tasks_solved, failed_attempts = input().split()
+        tasks_solved = int(tasks_solved)
+        failed_attempts = int(failed_attempts)
+        users.append([-tasks_solved, failed_attempts, user_name])
+    quick_sort(users, length)
+    for name in users:
+        print(name[2])
