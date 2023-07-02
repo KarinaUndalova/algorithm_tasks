@@ -1,4 +1,4 @@
-#88722429
+#88749269
 
 def quick_sort(users, length):
 
@@ -34,5 +34,4 @@ if __name__ == '__main__':
         failed_attempts = int(failed_attempts)
         users.append([-tasks_solved, failed_attempts, user_name])
     quick_sort(users, length)
-    for name in users:
-        print(name[2])
+    print(*(list(zip(*users))[2]), sep="\n")
